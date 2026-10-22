@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ravi connects to Amazon Linux 2023 on EC2 | #Buildwithvinit</title>
+<meta name="description" content="Animated beginner guide: launch an Amazon Linux 2023 EC2 instance and connect with or without a key pair.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to diagram</a>
+<div class="app">
+<aside class="side" aria-label="Steps">
+  <div class="brand"><h1>Ravi’s cloud computer</h1><p>Launch and connect to Amazon Linux 2023 on EC2</p></div>
+  <div class="ctrl" role="group" aria-label="Playback">
+    <button id="prev">Previous</button><button id="next">Next</button>
+    <button id="play" aria-pressed="false">Auto-play (5s)</button><button id="reset">Reset</button>
+    <button id="theme" aria-pressed="false">Light / dark</button>
+  </div>
+  <ol id="steps" class="steps"></ol>
+  <div class="legend"><h2>Packet legend</h2>
+    <p><i style="--c:var(--gold)"></i>SSH or browser request</p>
+    <p><i style="--c:var(--purple)"></i>Credentials (key or temporary key)</p>
+    <p><i style="--c:var(--green)"></i>Accepted, success</p>
+    <p><i style="--c:var(--red)"></i>Rejected at the door</p>
+  </div>
+  <p class="tag">#Buildwithvinit</p>
+</aside>
+<main id="main">
+<div class="stage" tabindex="0" aria-label="Architecture diagram, scrolls sideways on small screens">
+<svg id="svg" viewBox="0 0 1100 620" role="img" aria-labelledby="svgt svgd" xmlns="http://www.w3.org/2000/svg">
+<title id="svgt">Ravi connects from his laptop through the internet to an EC2 instance</title>
+<desc id="svgd">Laptop with browser and terminal, internet gateway, VPC, public subnet, security group on port 22, EC2 instance with a Linux terminal.</desc>
+<defs>
+<pattern id="dots" width="22" height="22" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1" fill="#27386b"/></pattern>
+<linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0a1230"/><stop offset="1" stop-color="#101d45"/></linearGradient>
+<path id="pB" d="M200,145 H335 V305 H700"/>
+<path id="pT" d="M200,430 H335 V305 H700"/>
+<path id="pK" d="M200,285 H310 V305 H700"/>
+<path id="pX" d="M200,430 H335 V305 H540"/>
+<path id="pG" d="M700,330 H355 V470 H200"/>
+</defs>
+<rect width="1100" height="620" fill="url(#sky)"/><rect width="1100" height="620" fill="url(#dots)"/>
+<!-- wires (behind everything) -->
+<g class="wire" fill="none" stroke-width="2" stroke-dasharray="7 6">
+<path d="M200,145 H335 V270" stroke="#fbbf24"/><path d="M200,430 H335 V340" stroke="#fbbf24"/>
+<path d="M200,285 H290" stroke="#a78bfa"/><path d="M380,305 H700" stroke="#fbbf24"/>
+<path d="M700,330 H355 V470 H200" stroke="#22c55e"/></g>
+<!-- laptop side -->
+<text class="lbl" x="30" y="60" font-size="16" font-weight="700">Ravi’s laptop</text>
+<text class="sub" x="30" y="80" font-size="12">(his home on the internet)</text>
+<g id="e-browser" class="box"><rect x="30" y="100" width="170" height="90" rx="10" fill="#14264f" stroke="#3b82f6"/><text class="lbl" x="115" y="138" text-anchor="middle" font-size="15" font-weight="700">Browser</text><text class="sub" x="115" y="160" text-anchor="middle" font-size="12">EC2 Instance Connect</text><text class="sub" x="115" y="177" text-anchor="middle" font-size="11">(browser access desk)</text></g>
+<g id="e-key" class="box"><rect x="30" y="250" width="170" height="70" rx="10" fill="#2a1f55" stroke="#a78bfa"/><text class="lbl" x="115" y="282" text-anchor="middle" font-size="15" font-weight="700">my-key.pem</text><text class="sub" x="115" y="302" text-anchor="middle" font-size="12">digital key</text></g>
+<g id="e-term" class="box"><rect x="30" y="400" width="170" height="90" rx="10" fill="#14264f" stroke="#fbbf24"/><text class="lbl" x="115" y="432" text-anchor="middle" font-size="15" font-weight="700">Local terminal</text><text class="sub" x="115" y="454" text-anchor="middle" font-size="12">CMD, PowerShell,</text><text class="sub" x="115" y="471" text-anchor="middle" font-size="12">Git Bash, MobaXterm, PuTTY</text></g>
+<text class="sub" x="214" y="136" font-size="11">Internet</text>
+<!-- cloud -->
+<g id="e-cloud" class="box"><rect x="260" y="25" width="810" height="555" rx="22" fill="#0e1d46" fill-opacity=".85" stroke="#3b82f6" stroke-width="2"/><text class="lbl" x="282" y="54" font-size="17" font-weight="700" fill="#60a5fa">AWS cloud city · your Region</text></g>
+<g id="e-igw" class="box"><rect x="290" y="270" width="90" height="70" rx="10" fill="#1b3a7a" stroke="#3b82f6"/><text class="lbl" x="335" y="300" text-anchor="middle" font-size="13" font-weight="700">Internet</text><text class="lbl" x="335" y="318" text-anchor="middle" font-size="13" font-weight="700">Gateway</text></g>
+<g id="e-vpc" class="box"><rect x="410" y="80" width="650" height="480" rx="16" fill="#0b1738" fill-opacity=".7" stroke="#3b82f6" stroke-dasharray="3 5"/><text class="lbl" x="430" y="106" font-size="14" font-weight="700" fill="#60a5fa">VPC · your private network</text></g>
+<g id="e-sub" class="box"><rect x="440" y="125" width="600" height="400" rx="14" fill="#0d2347" fill-opacity=".8" stroke="#14b8a6" stroke-dasharray="3 5"/><text class="lbl" x="460" y="150" font-size="14" font-weight="700" fill="#5eead4">Public subnet · route to the gateway</text></g>
+<g id="e-sg" class="box"><rect x="540" y="175" width="490" height="320" rx="14" fill="#0e2a3d" fill-opacity=".85" stroke="#fbbf24"/><text class="lbl" x="560" y="200" font-size="14" font-weight="700" fill="#fcd34d">Security group · door guard</text>
+<text class="sub" x="560" y="352" font-size="11">port 22 = staff entrance</text></g>
+<g id="e-door" class="box"><rect x="528" y="285" width="26" height="40" rx="4" fill="#3a2f0a" stroke="#fbbf24"/><text class="lbl" x="541" y="310" text-anchor="middle" font-size="12" font-weight="700">22</text></g>
+<g id="e-ec2" class="box"><rect x="700" y="230" width="300" height="230" rx="12" fill="#0b3b3f" stroke="#14b8a6" stroke-width="2"/><text class="lbl" x="720" y="256" font-size="14" font-weight="700" fill="#5eead4">EC2 · Amazon Linux 2023</text>
+<rect x="720" y="272" width="260" height="150" rx="8" fill="#050b1c" stroke="#2dd4bf" stroke-opacity=".5"/>
+<text id="t1" x="732" y="298" font-size="12" fill="#cbd5e1" font-family="ui-monospace,Consolas,monospace"></text>
+<text id="t2" x="732" y="322" font-size="12" fill="#86efac" font-family="ui-monospace,Consolas,monospace"></text>
+<text id="t3" x="732" y="346" font-size="12" fill="#cbd5e1" font-family="ui-monospace,Consolas,monospace"></text>
+<text id="t4" x="732" y="370" font-size="12" fill="#cbd5e1" font-family="ui-monospace,Consolas,monospace"></text>
+<text class="sub" x="720" y="445" font-size="11">Public IPv4 = computer address</text></g>
+<circle id="pulse" cx="985" cy="245" r="5" fill="#22c55e"><animate attributeName="r" values="4;11;4" dur="1.6s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;.2;1" dur="1.6s" repeatCount="indefinite"/></circle>
+<!-- packets -->
+<g class="pk" id="k-B"><circle r="7" fill="#fbbf24"><animateMotion dur="3.4s" repeatCount="indefinite"><mpath href="#pB"/></animateMotion></circle></g>
+<g class="pk" id="k-T"><circle r="7" fill="#fbbf24"><animateMotion dur="3.4s" repeatCount="indefinite"><mpath href="#pT"/></animateMotion></circle></g>
+<g class="pk" id="k-K"><circle r="7" fill="#a78bfa"><animateMotion dur="3.4s" begin="0.6s" repeatCount="indefinite"><mpath href="#pK"/></animateMotion></circle></g>
+<g class="pk" id="k-C"><circle r="7" fill="#a78bfa"><animateMotion dur="3.4s" begin="1.1s" repeatCount="indefinite"><mpath href="#pB"/></animateMotion></circle></g>
+<g class="pk" id="k-X"><circle r="7" fill="#ef4444"><animateMotion dur="2.6s" repeatCount="indefinite"><mpath href="#pX"/></animateMotion></circle></g>
+<g class="pk" id="k-G"><circle r="7" fill="#22c55e"><animateMotion dur="3.4s" begin="1.8s" repeatCount="indefinite"><mpath href="#pG"/></animateMotion></circle></g>
+<text class="sub" x="30" y="605" font-size="13" font-weight="700" fill="#fbbf24">#Buildwithvinit</text>
+<text id="story" class="lbl" x="250" y="605" font-size="13"></text>
+</svg></div>
+<section class="panel" aria-live="polite">
+  <h2 id="p-title"></h2>
+  <div class="grid">
+   <article><h3>In Plain Words</h3><p id="p-plain"></p></article>
+   <article><h3>Technical Explanation</h3><p id="p-tech"></p></article>
+   <article><h3>AWS Console Actions</h3><ol id="p-act"></ol></article>
+   <article><h3>Commands</h3><pre id="p-cmd" tabindex="0"></pre></article>
+   <article class="wide"><h3>Watch the Picture</h3><p id="p-watch"></p></article>
+  </div>
+</section>
+</main></div>
+<script src="js/app.js"></script>
+</body></html>
